@@ -60,6 +60,7 @@ struct fake_wifi_priv {
 /* Forward declarations */
 static int fake_wifi_start(struct ieee80211_hw *hw);
 static void fake_wifi_stop(struct ieee80211_hw *hw, bool suspend);
+static void fake_wifi_stop_wrapper(struct ieee80211_hw *hw);
 static void fake_wifi_tx(struct ieee80211_hw *hw,
 			 struct ieee80211_tx_control *control,
 			 struct sk_buff *skb);
@@ -109,7 +110,8 @@ static void fake_wifi_sw_scan_start(struct ieee80211_hw *hw, struct ieee80211_vi
 				    const u8 *mac_addr);
 static void fake_wifi_sw_scan_complete(struct ieee80211_hw *hw, struct ieee80211_vif *vif);
 static int fake_wifi_get_txpower(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
-				 unsigned int link_id, int *dbm);
+				unsigned int link_id, int *dbm);
+static int fake_wifi_get_txpower_wrapper(struct ieee80211_hw *hw, struct ieee80211_vif *vif, int *dbm);
 static void fake_wifi_wake_tx_queue(struct ieee80211_hw *hw, struct ieee80211_txq *txq);
 
 /*
@@ -117,13 +119,9 @@ static void fake_wifi_wake_tx_queue(struct ieee80211_hw *hw, struct ieee80211_tx
  * our driver and the mac80211 subsystem
  */
 static const struct ieee80211_ops fake_wifi_ops = {
-	.add_chanctx = ieee80211_emulate_add_chanctx,
-	.remove_chanctx = ieee80211_emulate_remove_chanctx,
-	.change_chanctx = ieee80211_emulate_change_chanctx,
-	.switch_vif_chanctx = ieee80211_emulate_switch_vif_chanctx,
 	.tx = fake_wifi_tx,
 	.start = fake_wifi_start,
-	.stop = fake_wifi_stop,
+	.stop = fake_wifi_stop_wrapper,
 	.add_interface = fake_wifi_add_interface,
 	.change_interface = fake_wifi_change_interface,
 	.remove_interface = fake_wifi_remove_interface,
@@ -150,7 +148,7 @@ static const struct ieee80211_ops fake_wifi_ops = {
 	.get_antenna = fake_wifi_get_antenna,
 	.sw_scan_start = fake_wifi_sw_scan_start,
 	.sw_scan_complete = fake_wifi_sw_scan_complete,
-	.get_txpower = fake_wifi_get_txpower,
+	.get_txpower = fake_wifi_get_txpower_wrapper,
 	.wake_tx_queue = fake_wifi_wake_tx_queue,
 };
 
@@ -538,11 +536,14 @@ static int fake_wifi_get_survey(struct ieee80211_hw *hw, int idx, struct survey_
 	if (idx != 0)
 		return -ENOENT;
 	
-	survey->channel = &(struct ieee80211_channel){
-		.band = NL80211_BAND_2GHZ,
-		.center_freq = 2437,
-		.hw_value = 6,
-	};
+	/* Use the already allocated channel from our band structure */
+	if (hw->wiphy->bands[NL80211_BAND_2GHZ] && 
+	    hw->wiphy->bands[NL80211_BAND_2GHZ]->channels) {
+		survey->channel = &hw->wiphy->bands[NL80211_BAND_2GHZ]->channels[0];
+	} else {
+		return -ENOENT;
+	}
+	
 	survey->filled = SURVEY_INFO_NOISE_DBM;
 	survey->noise = -95;
 	
@@ -671,9 +672,55 @@ static void fake_wifi_wake_tx_queue(struct ieee80211_hw *hw, struct ieee80211_tx
 static int fake_wifi_init_hw(struct fake_wifi_priv *priv)
 {
 	struct ieee80211_hw *hw = priv->hw;
+	struct ieee80211_supported_band *band;
+	struct ieee80211_channel *channel;
+	struct ieee80211_rate *rate;
 	int ret;
 	
 	pr_info("fake_wifi: Initializing fake hardware capabilities\n");
+	
+	/* Allocate memory for band structure */
+	band = kzalloc(sizeof(*band), GFP_KERNEL);
+	if (!band) {
+		pr_err("fake_wifi: Failed to allocate band structure\n");
+		return -ENOMEM;
+	}
+	
+	/* Allocate memory for channel structure */
+	channel = kzalloc(sizeof(*channel), GFP_KERNEL);
+	if (!channel) {
+		pr_err("fake_wifi: Failed to allocate channel structure\n");
+		kfree(band);
+		return -ENOMEM;
+	}
+	
+	/* Allocate memory for rate structure */
+	rate = kzalloc(sizeof(*rate), GFP_KERNEL);
+	if (!rate) {
+		pr_err("fake_wifi: Failed to allocate rate structure\n");
+		kfree(channel);
+		kfree(band);
+		return -ENOMEM;
+	}
+	
+	/* Initialize channel structure */
+	channel->band = NL80211_BAND_2GHZ;
+	channel->center_freq = 2437;  /* Channel 6 */
+	channel->hw_value = 6;
+	channel->max_power = FAKE_WIFI_MAX_TX_POWER;
+	channel->flags = 0;
+	
+	/* Initialize rate structure */
+	rate->bitrate = 10;  /* 1 Mbps */
+	rate->hw_value = 0;
+	rate->flags = 0;
+	
+	/* Initialize band structure */
+	band->band = NL80211_BAND_2GHZ;
+	band->n_channels = 1;
+	band->channels = channel;
+	band->n_bitrates = 1;
+	band->bitrates = rate;
 	
 	/* Set hardware capabilities */
 	ieee80211_hw_set(hw, SIGNAL_DBM);
@@ -686,22 +733,7 @@ static int fake_wifi_init_hw(struct fake_wifi_priv *priv)
 				    BIT(NL80211_IFTYPE_MONITOR);
 	
 	/* Set supported bands and channels */
-	/* For simplicity, we only support 2.4 GHz band */
-	hw->wiphy->bands[NL80211_BAND_2GHZ] = &(struct ieee80211_supported_band){
-		.band = NL80211_BAND_2GHZ,
-		.n_channels = 1,
-		.channels = &(struct ieee80211_channel){
-			.band = NL80211_BAND_2GHZ,
-			.center_freq = 2437,  /* Channel 6 */
-			.hw_value = 6,
-			.max_power = FAKE_WIFI_MAX_TX_POWER,
-		},
-		.n_bitrates = 1,
-		.bitrates = &(struct ieee80211_rate){
-			.bitrate = 10,  /* 1 Mbps */
-			.hw_value = 0,
-		},
-	};
+	hw->wiphy->bands[NL80211_BAND_2GHZ] = band;
 	
 	/* Set hardware address (fake MAC) */
 	SET_IEEE80211_PERM_ADDR(hw, FAKE_AP_BSSID);
@@ -716,6 +748,9 @@ static int fake_wifi_init_hw(struct fake_wifi_priv *priv)
 	ret = ieee80211_register_hw(hw);
 	if (ret) {
 		pr_err("fake_wifi: Failed to register hardware: %d\n", ret);
+		kfree(rate);
+		kfree(channel);
+		kfree(band);
 		return ret;
 	}
 	
@@ -779,6 +814,18 @@ static void __exit fake_wifi_exit(void)
 	
 	if (global_hw) {
 		pr_info("fake_wifi: Unregistering hardware...\n");
+		
+		/* Free allocated band structures before unregistering */
+		if (global_hw->wiphy->bands[NL80211_BAND_2GHZ]) {
+			struct ieee80211_supported_band *band = global_hw->wiphy->bands[NL80211_BAND_2GHZ];
+			if (band->bitrates)
+				kfree(band->bitrates);
+			if (band->channels)
+				kfree(band->channels);
+			kfree(band);
+			global_hw->wiphy->bands[NL80211_BAND_2GHZ] = NULL;
+		}
+		
 		ieee80211_unregister_hw(global_hw);
 		ieee80211_free_hw(global_hw);
 		global_hw = NULL;
@@ -795,3 +842,17 @@ MODULE_AUTHOR("FakeWiFi Developer");
 MODULE_DESCRIPTION("Fake Wi-Fi Driver for Testing - SoftMAC Implementation");
 MODULE_LICENSE("GPL");
 MODULE_VERSION(FAKE_WIFI_VERSION);
+
+/*
+ * Wrapper for ieee80211_ops .stop (no suspend argument)
+ */
+static void fake_wifi_stop_wrapper(struct ieee80211_hw *hw) {
+    fake_wifi_stop(hw, false);
+}
+
+/*
+ * Wrapper for ieee80211_ops .get_txpower (no link_id argument)
+ */
+static int fake_wifi_get_txpower_wrapper(struct ieee80211_hw *hw, struct ieee80211_vif *vif, int *dbm) {
+    return fake_wifi_get_txpower(hw, vif, 0, dbm);
+}
