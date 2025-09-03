@@ -1,0 +1,44 @@
+# Fake Wi-Fi Driver Configuration
+# This file documents the configurable parameters in the driver
+
+# Fake AP Configuration
+FAKE_AP_SSID="TestAP"
+FAKE_AP_BSSID="02:00:00:00:00:01"  # Locally administered MAC address
+
+# Hardware Configuration  
+FAKE_WIFI_MAX_TX_POWER=20          # dBm
+FAKE_WIFI_CHANNEL_2GHZ=6           # Channel 6 (2437 MHz)
+FAKE_WIFI_CHANNEL_5GHZ=36          # Channel 36 (5180 MHz) - not implemented
+
+# Driver Behavior
+# To modify these, edit the #define statements in fake_wifi.c
+
+# Supported Interface Modes:
+# - NL80211_IFTYPE_STATION (client mode)
+# - NL80211_IFTYPE_AP (access point mode)  
+# - NL80211_IFTYPE_MONITOR (monitor mode)
+
+# Hardware Capabilities:
+# - IEEE80211_HW_SIGNAL_DBM: Reports signal strength in dBm
+# - IEEE80211_HW_HAS_RATE_CONTROL: Driver handles rate control
+# - IEEE80211_HW_SUPPORTS_PS: Power saving support
+# - IEEE80211_HW_AMPDU_AGGREGATION: A-MPDU aggregation support
+
+# Frame Filtering:
+# - FIF_ALLMULTI: Accept all multicast frames
+# - FIF_OTHER_BSS: Accept frames from other BSSs
+# - FIF_PROMISC_IN_BSS: Promiscuous mode within BSS
+
+# Debug Settings:
+# Set kernel log level to see all messages:
+# echo 8 > /proc/sys/kernel/printk
+
+# Module Parameters (future enhancement):
+# The driver could be extended to accept module parameters like:
+# - debug=1 (enable debug mode)
+# - channel=6 (set default channel)
+# - ssid="CustomAP" (set custom SSID)
+# - max_responses=100 (limit probe responses)
+
+# Usage Example:
+# sudo insmod fake_wifi.ko debug=1 channel=11
