@@ -1,0 +1,212 @@
+[   95.412874] fake_wifi: Initializing fake hardware capabilities
+[   95.412985] ieee80211 phy1: Selected rate control algorithm 'minstrel_ht'
+[   95.413026] ------------[ cut here ]------------
+[   95.413027] WARNING: CPU: 2 PID: 7054 at net/wireless/util.c:233 set_mandatory_flags_band+0xd7/0x1c0 [cfg80211]
+[   95.413085] Modules linked in: fake_wifi(OE+) rfcomm vhost_vsock vmw_vsock_virtio_transport_common vhost vhost_iotlb vsock xt_set ip_set xt_addrtype xfrm_user xfrm_algo xt_comment ccm cmac algif_hash algif_skcipher af_alg sctp ip6_udp_tunnel udp_tunnel nvidia_uvm(POE) xt_CHECKSUM xt_MASQUERADE xt_conntrack ipt_REJECT nf_reject_ipv4 xt_tcpudp nft_compat nft_chain_nat nf_tables nfnetlink bnep overlay openvswitch nsh nf_conncount nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 libcrc32c intel_rapl_msr snd_acp_legacy_mach snd_acp_mach snd_soc_nau8821 nvidia_drm(POE) snd_acp3x_rn snd_soc_dmic nvidia_modeset(POE) snd_acp3x_pdm_dma binfmt_misc snd_ctl_led intel_rapl_common ledtrig_audio nls_iso8859_1 nvidia(POE) amdgpu snd_sof_amd_acp63 snd_sof_amd_vangogh snd_sof_amd_rembrandt snd_sof_amd_renoir snd_hda_codec_realtek edac_mce_amd snd_sof_amd_acp crct10dif_pclmul snd_hda_codec_generic snd_sof_pci polyval_clmulni snd_sof_xtensa_dsp polyval_generic snd_hda_codec_hdmi iwlmvm uvcvideo ghash_clmulni_intel snd_sof
+[   95.413160]  videobuf2_vmalloc sha256_ssse3 uvc sha1_ssse3 videobuf2_memops aesni_intel btusb videobuf2_v4l2 snd_sof_utils snd_hda_intel crypto_simd videodev btrtl snd_intel_dspcfg cryptd mac80211 snd_soc_core btintel joydev snd_intel_sdw_acpi videobuf2_common btbcm snd_compress snd_hda_codec ac97_bus btmtk amdxcp snd_pcm_dmaengine mc libarc4 rapl input_leds snd_hda_core drm_exec snd_pci_ps bluetooth snd_hwdep hp_wmi gpu_sched snd_seq_midi drm_buddy snd_rpl_pci_acp6x ecdh_generic sparse_keymap snd_seq_midi_event ecc snd_acp_pci drm_suballoc_helper snd_acp_legacy_common platform_profile drm_ttm_helper wmi_bmof serio_raw hid_multitouch snd_rawmidi snd_pci_acp6x iwlwifi k10temp ttm snd_seq snd_pcm drm_display_helper snd_seq_device cfg80211 cec snd_timer snd_pci_acp5x rc_core snd_rn_pci_acp3x i2c_algo_bit snd_acp_config snd snd_soc_acpi snd_pci_acp3x sch_fq_codel soundcore mac_hid acpi_tad kvm_amd ccp kvm irqbypass iptable_filter ip6table_filter ip6_tables br_netfilter bridge stp llc arp_tables msr parport_pc ppdev lp
+[   95.413251]  parport efi_pstore ip_tables x_tables autofs4 usbhid ucsi_acpi nvme hid_generic crc32_pclmul nvme_core r8169 sdhci_pci typec_ucsi ahci xhci_pci cqhci libahci i2c_piix4 xhci_pci_renesas nvme_auth sdhci realtek typec video i2c_hid_acpi i2c_hid wmi hid
+[   95.413282] CPU: 2 PID: 7054 Comm: insmod Tainted: P           OE      6.8.0-79-generic #79~22.04.1-Ubuntu
+[   95.413285] Hardware name: HP OMEN Laptop 15-en0xxx/8788, BIOS F.07 09/16/2020
+[   95.413287] RIP: 0010:set_mandatory_flags_band+0xd7/0x1c0 [cfg80211]
+[   95.413331] Code: 3c 03 75 d7 0f 0b eb d3 83 f8 05 0f 85 a4 00 00 00 8b 43 18 41 b8 07 00 00 00 31 f6 49 b9 00 04 10 00 00 00 80 00 85 c0 7f 15 <0f> 0b eb ad 66 83 f8 6e 74 58 83 0a 10 83 c6 01 39 73 18 7e 5e 48
+[   95.413333] RSP: 0018:ffffb1b751c8b6a0 EFLAGS: 00010206
+[   95.413336] RAX: 000000000000000a RBX: ffffa0ad9085db80 RCX: 0000000000000000
+[   95.413338] RDX: ffffa0ad20a39180 RSI: 0000000000000001 RDI: 000000000000000c
+[   95.413340] RBP: ffffb1b751c8b6b0 R08: 0000000000000006 R09: 0080000000100400
+[   95.413342] R10: 0000000000000000 R11: 0000000000000000 R12: ffffa0ad9085db80
+[   95.413343] R13: 0000000000000000 R14: ffffa0ac0bce03c0 R15: 0000000000000001
+[   95.413345] FS:  0000793609261c40(0000) GS:ffffa0ae27300000(0000) knlGS:0000000000000000
+[   95.413347] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   95.413349] CR2: 00005dac859b56f8 CR3: 000000000bd42000 CR4: 0000000000350ef0
+[   95.413352] Call Trace:
+[   95.413354]  <TASK>
+[   95.413358]  ? show_regs+0x6d/0x80
+[   95.413363]  ? __warn+0x89/0x160
+[   95.413367]  ? set_mandatory_flags_band+0xd7/0x1c0 [cfg80211]
+[   95.413411]  ? report_bug+0x17e/0x1b0
+[   95.413417]  ? handle_bug+0x6e/0xb0
+[   95.413422]  ? exc_invalid_op+0x18/0x80
+[   95.413424]  ? asm_exc_invalid_op+0x1b/0x20
+[   95.413431]  ? set_mandatory_flags_band+0xd7/0x1c0 [cfg80211]
+[   95.413475]  ieee80211_set_bitrate_flags+0x3d/0x80 [cfg80211]
+[   95.413522]  wiphy_register+0x683/0x8c0 [cfg80211]
+[   95.413566]  ? srso_return_thunk+0x5/0x5f
+[   95.413569]  ? __rtnl_unlock+0x37/0x70
+[   95.413573]  ? srso_return_thunk+0x5/0x5f
+[   95.413575]  ? netdev_run_todo+0x5f/0x350
+[   95.413581]  ieee80211_register_hw+0x913/0xf60 [mac80211]
+[   95.413646]  ? vprintk_emit+0x1f0/0x220
+[   95.413651]  ? fake_wifi_init+0x1ae/0xff0 [fake_wifi]
+[   95.413656]  fake_wifi_init+0x2cd/0xff0 [fake_wifi]
+[   95.413659]  ? __pfx_fake_wifi_init+0x10/0x10 [fake_wifi]
+[   95.413664]  do_one_initcall+0x5e/0x340
+[   95.413671]  do_init_module+0x97/0x290
+[   95.413675]  load_module+0xb85/0xcd0
+[   95.413680]  ? srso_return_thunk+0x5/0x5f
+[   95.413682]  ? security_kernel_post_read_file+0x75/0x90
+[   95.413689]  init_module_from_file+0x96/0x100
+[   95.413692]  ? srso_return_thunk+0x5/0x5f
+[   95.413694]  ? init_module_from_file+0x96/0x100
+[   95.413701]  idempotent_init_module+0x11c/0x310
+[   95.413707]  __x64_sys_finit_module+0x64/0xd0
+[   95.413710]  x64_sys_call+0x15ed/0x2480
+[   95.413713]  do_syscall_64+0x81/0x170
+[   95.413717]  ? srso_return_thunk+0x5/0x5f
+[   95.413719]  ? mmap_region+0x50/0xc0
+[   95.413726]  ? srso_return_thunk+0x5/0x5f
+[   95.413728]  ? vm_mmap_pgoff+0x128/0x1a0
+[   95.413734]  ? srso_return_thunk+0x5/0x5f
+[   95.413737]  ? ksys_mmap_pgoff+0x120/0x270
+[   95.413742]  ? srso_return_thunk+0x5/0x5f
+[   95.413744]  ? syscall_exit_to_user_mode+0x83/0x260
+[   95.413748]  ? srso_return_thunk+0x5/0x5f
+[   95.413750]  ? do_syscall_64+0x8d/0x170
+[   95.413753]  ? srso_return_thunk+0x5/0x5f
+[   95.413755]  ? syscall_exit_to_user_mode+0x83/0x260
+[   95.413759]  ? srso_return_thunk+0x5/0x5f
+[   95.413761]  ? do_syscall_64+0x8d/0x170
+[   95.413764]  ? srso_return_thunk+0x5/0x5f
+[   95.413767]  ? do_syscall_64+0x8d/0x170
+[   95.413781]  ? srso_return_thunk+0x5/0x5f
+[   95.413783]  ? ext4_llseek+0x60/0x120
+[   95.413790]  ? srso_return_thunk+0x5/0x5f
+[   95.413793]  ? ksys_lseek+0x80/0xd0
+[   95.413798]  ? srso_return_thunk+0x5/0x5f
+[   95.413801]  ? syscall_exit_to_user_mode+0x83/0x260
+[   95.413806]  ? srso_return_thunk+0x5/0x5f
+[   95.413809]  ? do_syscall_64+0x8d/0x170
+[   95.413813]  ? srso_return_thunk+0x5/0x5f
+[   95.413816]  ? __x64_sys_openat+0x6c/0xa0
+[   95.413819]  ? srso_return_thunk+0x5/0x5f
+[   95.413822]  ? syscall_exit_to_user_mode+0x83/0x260
+[   95.413827]  ? srso_return_thunk+0x5/0x5f
+[   95.413830]  ? do_syscall_64+0x8d/0x170
+[   95.413833]  ? srso_return_thunk+0x5/0x5f
+[   95.413836]  ? exc_page_fault+0x94/0x1b0
+[   95.413840]  entry_SYSCALL_64_after_hwframe+0x78/0x80
+[   95.413844] RIP: 0033:0x793608b1e88d
+[   95.413880] Code: 5b 41 5c c3 66 0f 1f 84 00 00 00 00 00 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 73 b5 0f 00 f7 d8 64 89 01 48
+[   95.413883] RSP: 002b:00007ffcb40c84b8 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
+[   95.413886] RAX: ffffffffffffffda RBX: 00005dac859b0780 RCX: 0000793608b1e88d
+[   95.413888] RDX: 0000000000000000 RSI: 00005dac60484cd2 RDI: 0000000000000003
+[   95.413891] RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+[   95.413892] R10: 0000000000000003 R11: 0000000000000246 R12: 00005dac60484cd2
+[   95.413894] R13: 00005dac859b46f0 R14: 00005dac60483888 R15: 00005dac859b0890
+[   95.413901]  </TASK>
+[   95.413903] ---[ end trace 0000000000000000 ]---
+[   95.414479] fake_wifi: Hardware registered successfully with mac80211
+[   95.414483] fake_wifi: Fake AP ready - SSID: TestAP, BSSID: 02:00:00:00:00:01
+[   95.414486] fake_wifi: Driver loaded successfully
+[   95.414488] fake_wifi: Use 'iw dev wlan0 scan trigger' to test probe requests
+[   95.414570] BUG: kernel NULL pointer dereference, address: 0000000000000068
+[   95.414580] #PF: supervisor read access in kernel mode
+[   95.414583] #PF: error_code(0x0000) - not-present page
+[   95.414587] PGD 0 P4D 0 
+[   95.414592] Oops: 0000 [#1] PREEMPT SMP NOPTI
+[   95.414597] CPU: 8 PID: 1175 Comm: NetworkManager Tainted: P        W  OE      6.8.0-79-generic #79~22.04.1-Ubuntu
+[   95.414602] Hardware name: HP OMEN Laptop 15-en0xxx/8788, BIOS F.07 09/16/2020
+[   95.414605] RIP: 0010:cfg80211_get_drvinfo+0x25/0x190 [cfg80211]
+[   95.414708] Code: 90 90 90 90 90 0f 1f 44 00 00 55 48 89 e5 41 56 41 55 41 54 53 4c 8b a7 10 04 00 00 48 89 f3 49 8b 04 24 48 8b 80 b8 01 00 00 <48> 8b 40 68 48 85 c0 0f 84 34 01 00 00 4c 8b 28 4c 8d 76 04 be 20
+[   95.414712] RSP: 0018:ffffb1b741453890 EFLAGS: 00010286
+[   95.414716] RAX: 0000000000000000 RBX: ffffa0ad016b9408 RCX: 636972656e65672d
+[   95.414720] RDX: 000000000001448a RSI: ffffa0ad016b9408 RDI: ffffa0ac0bce4000
+[   95.414723] RBP: ffffb1b7414538b0 R08: 0000000000000000 R09: 0000000000000000
+[   95.414725] R10: 0000000000000000 R11: 0000000000000000 R12: ffffa0ac0bce49f0
+[   95.414728] R13: ffffffffc0cae0a0 R14: 0000000000000000 R15: ffffb1b741453a97
+[   95.414731] FS:  000078b8a12454c0(0000) GS:ffffa0ae27600000(0000) knlGS:0000000000000000
+[   95.414735] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   95.414738] CR2: 0000000000000068 CR3: 00000001010fe000 CR4: 0000000000350ef0
+[   95.414741] Call Trace:
+[   95.414744]  <TASK>
+[   95.414749]  ? show_regs+0x6d/0x80
+[   95.414756]  ? __die+0x24/0x80
+[   95.414761]  ? page_fault_oops+0x99/0x1b0
+[   95.414769]  ? do_user_addr_fault+0x2f5/0x680
+[   95.414775]  ? exc_page_fault+0x83/0x1b0
+[   95.414784]  ? asm_exc_page_fault+0x27/0x30
+[   95.414795]  ? cfg80211_get_drvinfo+0x25/0x190 [cfg80211]
+[   95.414849]  ethtool_get_drvinfo+0x67/0x2b0
+[   95.414855]  ? srso_return_thunk+0x5/0x5f
+[   95.414861]  __dev_ethtool+0x59f/0x2020
+[   95.414865]  ? sysvec_call_function+0xa6/0xd0
+[   95.414870]  ? asm_sysvec_call_function+0x1b/0x20
+[   95.414875]  ? srso_return_thunk+0x5/0x5f
+[   95.414879]  ? sk_ioctl+0x4e/0x110
+[   95.414885]  ? srso_return_thunk+0x5/0x5f
+[   95.414889]  ? kmalloc_trace+0x139/0x360
+[   95.414894]  ? srso_return_thunk+0x5/0x5f
+[   95.414897]  ? dev_ethtool+0x92/0x1b0
+[   95.414902]  dev_ethtool+0xdf/0x1b0
+[   95.414908]  dev_ioctl+0x16f/0x560
+[   95.414914]  sock_do_ioctl+0xe7/0x140
+[   95.414921]  ? srso_return_thunk+0x5/0x5f
+[   95.414925]  sock_ioctl+0xfc/0x350
+[   95.414930]  ? __fput+0x160/0x2e0
+[   95.414935]  ? srso_return_thunk+0x5/0x5f
+[   95.414938]  ? kmem_cache_free+0x36f/0x470
+[   95.414944]  __x64_sys_ioctl+0xa3/0xf0
+[   95.414951]  x64_sys_call+0xa71/0x2480
+[   95.414956]  do_syscall_64+0x81/0x170
+[   95.414961]  ? srso_return_thunk+0x5/0x5f
+[   95.414964]  ? srso_return_thunk+0x5/0x5f
+[   95.414967]  ? syscall_exit_to_user_mode+0x83/0x260
+[   95.414972]  ? srso_return_thunk+0x5/0x5f
+[   95.414975]  ? do_syscall_64+0x8d/0x170
+[   95.414979]  ? srso_return_thunk+0x5/0x5f
+[   95.414982]  ? __sys_socket+0xe7/0x120
+[   95.414987]  ? srso_return_thunk+0x5/0x5f
+[   95.414990]  ? syscall_exit_to_user_mode+0x83/0x260
+[   95.414994]  ? srso_return_thunk+0x5/0x5f
+[   95.414997]  ? do_syscall_64+0x8d/0x170
+[   95.415001]  ? srso_return_thunk+0x5/0x5f
+[   95.415004]  ? alloc_empty_file+0x85/0x130
+[   95.415008]  ? srso_return_thunk+0x5/0x5f
+[   95.415011]  ? alloc_file+0x9b/0x170
+[   95.415015]  ? srso_return_thunk+0x5/0x5f
+[   95.415018]  ? alloc_file_pseudo+0x9e/0x100
+[   95.415025]  ? srso_return_thunk+0x5/0x5f
+[   95.415028]  ? __sys_socket+0xe7/0x120
+[   95.415032]  ? srso_return_thunk+0x5/0x5f
+[   95.415035]  ? syscall_exit_to_user_mode+0x83/0x260
+[   95.415040]  ? srso_return_thunk+0x5/0x5f
+[   95.415043]  ? do_syscall_64+0x8d/0x170
+[   95.415050]  ? srso_return_thunk+0x5/0x5f
+[   95.415053]  ? syscall_exit_to_user_mode+0x83/0x260
+[   95.415058]  ? srso_return_thunk+0x5/0x5f
+[   95.415061]  ? do_syscall_64+0x8d/0x170
+[   95.415067]  ? srso_return_thunk+0x5/0x5f
+[   95.415070]  ? syscall_exit_to_user_mode+0x83/0x260
+[   95.415075]  ? srso_return_thunk+0x5/0x5f
+[   95.415078]  ? do_syscall_64+0x8d/0x170
+[   95.415082]  ? do_syscall_64+0x8d/0x170
+[   95.415086]  ? do_syscall_64+0x8d/0x170
+[   95.415090]  ? srso_return_thunk+0x5/0x5f
+[   95.415095]  entry_SYSCALL_64_after_hwframe+0x78/0x80
+[   95.415098] RIP: 0033:0x78b8a1f1a94f
+[   95.415131] Code: 00 48 89 44 24 18 31 c0 48 8d 44 24 60 c7 04 24 10 00 00 00 48 89 44 24 08 48 8d 44 24 20 48 89 44 24 10 b8 10 00 00 00 0f 05 <41> 89 c0 3d 00 f0 ff ff 77 1f 48 8b 44 24 18 64 48 2b 04 25 28 00
+[   95.415134] RSP: 002b:00007fff53073f30 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+[   95.415139] RAX: ffffffffffffffda RBX: 00007fff530740c0 RCX: 000078b8a1f1a94f
+[   95.415141] RDX: 00007fff530740e0 RSI: 0000000000008946 RDI: 000000000000001d
+[   95.415144] RBP: 00007fff53074230 R08: 000000000000000a R09: 0000000000000000
+[   95.415146] R10: 00007fff53074080 R11: 0000000000000246 R12: 0000000000000007
+[   95.415149] R13: 0000000000000000 R14: 00007fff530740e0 R15: 00007fff530740c0
+[   95.415156]  </TASK>
+[   95.415158] Modules linked in: fake_wifi(OE) rfcomm vhost_vsock vmw_vsock_virtio_transport_common vhost vhost_iotlb vsock xt_set ip_set xt_addrtype xfrm_user xfrm_algo xt_comment ccm cmac algif_hash algif_skcipher af_alg sctp ip6_udp_tunnel udp_tunnel nvidia_uvm(POE) xt_CHECKSUM xt_MASQUERADE xt_conntrack ipt_REJECT nf_reject_ipv4 xt_tcpudp nft_compat nft_chain_nat nf_tables nfnetlink bnep overlay openvswitch nsh nf_conncount nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 libcrc32c intel_rapl_msr snd_acp_legacy_mach snd_acp_mach snd_soc_nau8821 nvidia_drm(POE) snd_acp3x_rn snd_soc_dmic nvidia_modeset(POE) snd_acp3x_pdm_dma binfmt_misc snd_ctl_led intel_rapl_common ledtrig_audio nls_iso8859_1 nvidia(POE) amdgpu snd_sof_amd_acp63 snd_sof_amd_vangogh snd_sof_amd_rembrandt snd_sof_amd_renoir snd_hda_codec_realtek edac_mce_amd snd_sof_amd_acp crct10dif_pclmul snd_hda_codec_generic snd_sof_pci polyval_clmulni snd_sof_xtensa_dsp polyval_generic snd_hda_codec_hdmi iwlmvm uvcvideo ghash_clmulni_intel snd_sof
+[   95.415252]  videobuf2_vmalloc sha256_ssse3 uvc sha1_ssse3 videobuf2_memops aesni_intel btusb videobuf2_v4l2 snd_sof_utils snd_hda_intel crypto_simd videodev btrtl snd_intel_dspcfg cryptd mac80211 snd_soc_core btintel joydev snd_intel_sdw_acpi videobuf2_common btbcm snd_compress snd_hda_codec ac97_bus btmtk amdxcp snd_pcm_dmaengine mc libarc4 rapl input_leds snd_hda_core drm_exec snd_pci_ps bluetooth snd_hwdep hp_wmi gpu_sched snd_seq_midi drm_buddy snd_rpl_pci_acp6x ecdh_generic sparse_keymap snd_seq_midi_event ecc snd_acp_pci drm_suballoc_helper snd_acp_legacy_common platform_profile drm_ttm_helper wmi_bmof serio_raw hid_multitouch snd_rawmidi snd_pci_acp6x iwlwifi k10temp ttm snd_seq snd_pcm drm_display_helper snd_seq_device cfg80211 cec snd_timer snd_pci_acp5x rc_core snd_rn_pci_acp3x i2c_algo_bit snd_acp_config snd snd_soc_acpi snd_pci_acp3x sch_fq_codel soundcore mac_hid acpi_tad kvm_amd ccp kvm irqbypass iptable_filter ip6table_filter ip6_tables br_netfilter bridge stp llc arp_tables msr parport_pc ppdev lp
+[   95.415364]  parport efi_pstore ip_tables x_tables autofs4 usbhid ucsi_acpi nvme hid_generic crc32_pclmul nvme_core r8169 sdhci_pci typec_ucsi ahci xhci_pci cqhci libahci i2c_piix4 xhci_pci_renesas nvme_auth sdhci realtek typec video i2c_hid_acpi i2c_hid wmi hid
+[   95.415402] CR2: 0000000000000068
+[   95.415407] ---[ end trace 0000000000000000 ]---
+[   95.611375] RIP: 0010:cfg80211_get_drvinfo+0x25/0x190 [cfg80211]
+[   95.611438] Code: 90 90 90 90 90 0f 1f 44 00 00 55 48 89 e5 41 56 41 55 41 54 53 4c 8b a7 10 04 00 00 48 89 f3 49 8b 04 24 48 8b 80 b8 01 00 00 <48> 8b 40 68 48 85 c0 0f 84 34 01 00 00 4c 8b 28 4c 8d 76 04 be 20
+[   95.611442] RSP: 0018:ffffb1b741453890 EFLAGS: 00010286
+[   95.611445] RAX: 0000000000000000 RBX: ffffa0ad016b9408 RCX: 636972656e65672d
+[   95.611448] RDX: 000000000001448a RSI: ffffa0ad016b9408 RDI: ffffa0ac0bce4000
+[   95.611450] RBP: ffffb1b7414538b0 R08: 0000000000000000 R09: 0000000000000000
+[   95.611452] R10: 0000000000000000 R11: 0000000000000000 R12: ffffa0ac0bce49f0
+[   95.611455] R13: ffffffffc0cae0a0 R14: 0000000000000000 R15: ffffb1b741453a97
+[   95.611457] FS:  000078b8a12454c0(0000) GS:ffffa0ae27600000(0000) knlGS:0000000000000000
+[   95.611460] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   95.611462] CR2: 0000000000000068 CR3: 00000001010fe000 CR4: 0000000000350ef0
+[   95.611465] note: NetworkManager[1175] exited with irqs disabled
+^C
+

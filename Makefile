@@ -4,6 +4,9 @@
 # Module name
 obj-m := fake_wifi.o
 
+# Add debug flags for better crash analysis
+ccflags-y += -g -O1 -DDEBUG
+
 # Kernel source directory (adjust as needed for your system)
 KERNEL_SRC := /lib/modules/$(shell uname -r)/build
 
@@ -18,6 +21,36 @@ clean:
 # Install target (requires root)
 install: all
 	sudo make -C $(KERNEL_SRC) M=$(PWD) modules_install
+
+# Debug targets for crash analysis
+debug: ccflags-y += -g -O1 -DDEBUG
+debug: all
+
+symbols:
+	nm fake_wifi.ko | grep -E "(fake_wifi|init|exit)"
+
+disasm:
+	objdump -d fake_wifi.ko > fake_wifi.disasm
+
+addr2line:
+	@echo "Usage: make addr2line ADDR=0x1234 FUNC=function_name"
+	@echo "Example: make addr2line ADDR=0x1a8 FUNC=fake_wifi_init_hw"
+
+addr2line:
+ifdef ADDR
+ifdef FUNC
+	@echo "Resolving $(FUNC)+$(ADDR):"
+	@objdump -t fake_wifi.ko | grep $(FUNC) | awk '{print $$1}' | while read func_addr; do \
+		actual_addr=$$(printf "0x%x" $$((0x$$func_addr + $(ADDR)))); \
+		echo "Function address: 0x$$func_addr, Offset: $(ADDR), Actual: $$actual_addr"; \
+		addr2line -e fake_wifi.ko -f -C $$actual_addr; \
+	done
+else
+	@echo "Error: Please specify FUNC=function_name"
+endif
+else
+	@echo "Error: Please specify ADDR=0x1234"
+endif
 	sudo depmod -a
 
 # Load the module (requires root)
